@@ -1,34 +1,17 @@
 ---
-
 ---
-{% if page.showJS %}
-eqfeed_callback(
-{% endif %}
-
-  {
-    "type": "FeatureCollection",
-    "features": [
-
-    {% for pin in site.pins %}
-
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            {{ pin.longitude }},
-            {{ pin.latitude }}
-            ]
-          },
-          "properties": {
-            "username": "{{ pin.githubHandle }}"
-          }
-        }{% if forloop.last == false %},{% endif %}
-
-    {% endfor %}
-  ]
-  }
-
-{% if page.showJS %}
-)
-{% endif %}
+{% if page.showJS %}eqfeed_callback({% endif %}{
+  "type": "FeatureCollection",
+  "features": [{% for pin in site.pins limit:100 %}
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ {{ pin.longitude }}, {{ pin.latitude }} ]
+      },
+      "properties": {
+        "username": "{{ pin.githubHandle }}",
+        "index": {{ forloop.index }}
+      }
+    }{% if forloop.last == false %},{% endif %}{% endfor %}]
+}{% if page.showJS %});{% endif %}
