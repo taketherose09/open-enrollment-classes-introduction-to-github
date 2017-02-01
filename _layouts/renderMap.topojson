@@ -1,8 +1,9 @@
 ---
 ---
+{% assign sorted_pins = (site.pins | sort: 'date') | reverse %}
 {% if page.showJS %}eqfeed_callback({% endif %}{
   "type": "FeatureCollection",
-  "features": [{% for pin in site.pins limit:100 %}
+  "features": [{% for pin in sorted_pins limit:100 %}
     {
       "type": "Feature",
       "geometry": {
@@ -14,7 +15,8 @@
       },
       "properties": {
         "username": "{% if pin.githubHandle %}{{ pin.githubHandle }}{% elsif pin.githubhandle %}{{ pin.githubhandle }}{% endif %}",
-        "index": {{ forloop.index }}
+        "index": {{ forloop.index }},
+        "date": "{{ pin.date }}"
       }
     }{% if forloop.last == false %},{% endif %}{% endfor %}]
 }{% if page.showJS %});{% endif %}
